@@ -1,0 +1,159 @@
+<div class="contain-step-1">
+    <div class="row margin-none">
+        <div class="col-md-12 col-sm-12 col-xs-12 paddiing-none">
+            <div class="step-1">
+                <div class="container">
+                    <div class="header-title">
+                        <h2 class="title-1">List of Todo</h2>
+                    </div>
+                    <div class="right-btn pull-right">
+                        <button class="btn btn-white btn-secondary" style="margin-right: 5px;" (click)="ShowModal(add);">Add Todo
+                        </button>
+                    </div>
+                    <div class="right-btn pull-right" *ngIf="showDeleteTodoButton">
+                        <button class="btn btn-white btn-secondary" style="margin-right: 5px;" (click)="confirmDelete(delete);">Delete Todo
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <div id="listingtabel_filter" class="dataTables_filter" style="margin-top: 10px; float: right; margin-right: 10px;">
+                    <label>
+                        <input type="text" placeholder="Search" name="keyword" id="keyword" [(ngModel)]="filterKeyword" (ngModelChange)="filterTextChange()"
+                            class="input-sm form-control" value="">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+
+            <div class="custTable">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="">
+                                    <input type="checkbox" [(ngModel)]="isMainCheckboxSelected" (change)="selectAll()">&nbsp;
+                                    <a>#</a>
+                                </th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th> Time of event</th>
+                                <th class="custTH">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="totalrecords <= 0">
+                                <td colspan="9" class="text-center">No data found</td>
+                            </tr>
+                            <!-- -->
+                            <tr *ngFor="let item of todoList; let i = index;">
+                                <td>
+
+                                    <input type="checkbox" class="webformids" [(ngModel)]="item.selected" (change)="selectTodos()"> &nbsp;
+                                    <span *ngIf="!showCheckBox">{{ ((currentPage - 1)*pagesize) + i + 1}}</span>
+                                </td>
+
+                                <td>
+
+                                    {{item.title}}
+                                </td>
+                                <td>
+
+                                    {{item.description}}
+                                </td>
+                                <td> {{item.createdDate | date:'dd-MM-yyyy HH:mm' }}</td>
+
+                                <td style="width: 10%; text-align: center; vertical-align: middle;">
+                                    <a class="action-btn" title="Edit" (click)="showEditModal(add,item.id);">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <!-- <a class="action-btn" title="Delete" (click)="confirmDelete(delete, item.todoId)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a> -->
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row cust-pagi">
+                <ngb-pagination [(page)]="currentPage" [pageSize]="pagesize" [collectionSize]="totalrecords" (pageChange)="changePage()" [maxSize]="10" [rotate]="true"
+                    [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #add let-modal>
+    <form [formGroup]="todoForm" #todoFormTemplate="ngForm" (ngSubmit)="save()">
+        <div class="modal-header">
+            <h4 *ngIf="!selectedToDo.todoId" class="modal-title">Add Todo</h4>
+            <h4 *ngIf="selectedToDo.todoId" class="modal-title">Edit Todo</h4>
+            <button type="button" class="close" (click)="modal.dismiss()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" style=" margin-bottom: 0rem;">
+                <label class="form-label" for="title" style="font-weight: 700;font-size: 0.85rem;">
+                    Title:
+                    <span class="as-required">*</span>
+                </label>
+                <input type="text" id="title" class="form-control" name="title" formControlName="title" style="display: inline;" />
+                <span *ngIf="(f.title.touched || todoFormTemplate.submitted) && f.title.errors?.required" class="as-required-msg">Title is required.</span>
+                <span *ngIf="f.title.errors?.whitespace" class="as-required-msg">Title white space is not allowed.</span>
+
+
+            </div>
+            <div class="form-group" style=" margin-bottom: 0rem;">
+                <label class="form-label" for="description" style="font-weight: 700;font-size: 0.85rem;">
+                    Description:</label>
+                <textarea type="text" id="description" class="form-control" name="description" formControlName="description" style="display: inline;"></textarea>
+                <span *ngIf="f.description.errors?.whitespace" class="as-required-msg">Description white space is not allowed.</span>
+            </div>
+            <div class="form-group" style=" margin-bottom: 0rem;">
+                <label class="form-label" for="vendorWiseSite" style="font-weight: 700;font-size: 0.85rem;">
+                    Time of event:
+                    <span class="as-required">*</span>
+                </label>
+                <input placeholder="Time of event" formControlName="eventTime" [min]="minDate" class="form-control " [owlDateTime]="datetimePicker_"
+                    [owlDateTimeTrigger]="datetimePicker_" (focus)="datetimePicker_.open()">
+                <owl-date-time #datetimePicker_></owl-date-time>
+            </div>
+            <span *ngIf="(f.eventTime.touched || todoFormTemplate.submitted) && f.eventTime.errors?.required" class="as-required-msg">Time of event is required.</span>
+
+
+            <input type="hidden" name="id" id="id" formControlName="id">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
+            <button type="submit" class="btn btn-primary" name="submit">Save</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #delete let-modal>
+    <div role="dialog" style="display: block;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <label class="modal-title">
+
+                    Are you sure you want to delete Todo?</label>
+                <button type="button" class="close" (click)="modal.dismiss()">×</button>
+            </div>
+            <div class="modal-footer cs_fixer split_buttons">
+                <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Cancel</button>
+                <button data-bb-handler="confirm" type="button" class="btn btn-success" (click)="modal.close(true)">Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,102 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~ngx-toastr/toastr.css";
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+/* for date picker in export*/
+.cdk-overlay-container {
+    position: fixed;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    position: absolute;
+    z-index: 9999999 !important;
+  }
+  .cdk-global-overlay-wrapper, .cdk-overlay-container {
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    position: absolute;
+    z-index: 9999999 !important;
+  }
+  
+  select::-ms-expand {
+    display: none;
+  }
+  
+  .cdk-overlay-container {
+    position: fixed;
+    z-index: 1090;
+  }
+  .step-1{
+      background-color: #007bff;
+      padding: 15px 0px;
+  }
+  .step-1 .title-1{
+    color: #fff;
+    font-size: 2rem;
+font-weight: 600;
+  }
+  .modal-content{
+    border: none;
+    border-radius: .3rem;
+  }
+  .btn-white{
+      background: #fff;
+      color: #000;
+      border-color: transparent;
+  }
+  .modal-header{
+      background-color: #007bff;
+      border-top-left-radius: 0rem;
+      border-top-right-radius: 0rem;
+  }
+  .modal-header .modal-title, .modal-header .close{
+    color: #fff;
+    text-shadow: transparent;
+    opacity: 1;
+  }
+  .cust-pagi{
+    float: right;
+    margin-right: 0px;
+  }
+  .close:focus{
+      outline-color: transparent;
+  }
+  .as-required-msg{
+      color: red;
+  }
+  .right-btn{
+      float: right;
+      display: block;
+  }
+  .header-title{
+      display: inline-block;
+  }
+  .margin-none{
+      margin-right: 0px;
+      margin-left: 0px;
+  }
+  .paddiing-none{
+      padding-left: 0px;
+      padding-right: 0px;
+  }
+  @media only screen and (max-width: 567px){
+    .step-1 .title-1{
+      font-size: 1.5rem;
+        font-weight: 600;
+      }
+  }
+  @media only screen and (max-width: 400px){
+    .right-btn{
+        float: none;
+        display: inline-block;
+    }
+    .header-title{
+        display: block;
+    }
+  }
